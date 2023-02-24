@@ -1,11 +1,13 @@
-import React, { useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 import { Button, Menu } from 'antd'
 import { theme } from 'antd'
-import './menu.scss'
 import { MenuProp, routesData } from 'src/route/routesData'
 import { Link } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
+import { getAbsoluteLink, getKeyByLink, getOpenedKeys } from './utils'
+import './menu.scss'
 
 const { useToken } = theme
 
@@ -25,27 +27,6 @@ function getItem(
     label,
     type,
   } as MenuItem
-}
-
-function getAbsoluteLink(menu: MenuProp, routesData: MenuProp[]) {
-  const path: string[] = []
-  let flag = false
-  function search(menu: MenuProp, routeData: MenuProp[]) {
-    for (let i = 0; i < routeData.length; i++) {
-      if (flag) return
-      const item = routeData[i]
-      if (item.key === menu.key) {
-        flag = true
-        path.unshift(item.link)
-        return
-      } else if (item.children && item.children.length > 0) {
-        search(menu, item.children)
-      }
-      if (flag) path.unshift(item.link)
-    }
-  }
-  search(menu, routesData)
-  return path.join('')
 }
 
 function getItemLabel(menu: MenuProp, routesData: MenuProp[]) {
@@ -71,37 +52,45 @@ function getItems(routes: MenuProp[]): MenuItem[] {
 const MenuComp: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false)
   const { token } = useToken()
+  const { pathname } = useLocation()
+  const [selectedKeys, setSelectedKeys] = useState(['/'])
+  const [openedKeys, setOpenedKeys] = useState<string[]>([])
 
   const toggleCollapsed = () => {
     setCollapsed(!collapsed)
   }
+  //TODO Multi Skin
   const style = useMemo(
     () => ({
-      color: token.colorText,
-      backgroundColor: token.colorBgContainer,
+      //   color: token.colorText,
+      //   backgroundColor: token.colorBgContainer,
+      height: '100%',
     }),
     [token],
   )
   const items = getItems(routesData)
 
+  useEffect(() => {
+    const key = getKeyByLink(pathname, routesData)
+    const keys = getOpenedKeys(pathname, routesData)
+    setOpenedKeys(keys)
+    setSelectedKeys([key || '/'])
+  }, [pathname])
+
   return (
     <div>
-      <Button
-        type="primary"
-        onClick={toggleCollapsed}
-        style={{ marginBottom: 16 }}
-      >
+      <Button type="primary" onClick={toggleCollapsed}>
         {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
       </Button>
       <Menu
-        defaultSelectedKeys={['home']}
-        defaultOpenKeys={[]}
+        selectedKeys={selectedKeys}
+        openKeys={openedKeys}
         mode="inline"
-        theme="dark"
-        style={style}
+        theme="light"
         inlineCollapsed={collapsed}
         items={items}
         className="midway-menu"
+        onOpenChange={(item) => setOpenedKeys(item)}
       />
     </div>
   )

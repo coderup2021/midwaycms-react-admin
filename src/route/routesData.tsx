@@ -25,7 +25,7 @@ export interface MenuProp {
 export const routesData: MenuProp[] = [
   {
     index: true,
-    key: 'home',
+    key: '/',
     titleKey: 'home',
     link: '/',
     icon: <HomeOutlined />,

@@ -13,9 +13,9 @@ const AntdProvider: FC<PropsWithChildren> = ({ children }) => {
     <ConfigProvider
       theme={{
         token: {
-          colorBgLayout: '#0F172A',
-          colorBgContainer: '#13213C',
-          colorText: 'rgba(255, 255, 255, 1)',
+          //   colorBgLayout: '#0F172A',
+          //   colorBgContainer: '#13213C',
+          //   colorText: 'rgba(255, 255, 255, 1)',
         },
       }}
       locale={zhCN}

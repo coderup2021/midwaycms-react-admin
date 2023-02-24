@@ -4,6 +4,7 @@ import Menu from 'src/components/Menu'
 import { theme } from 'antd'
 import { Header, Footer, Content, Sider } from './'
 import './layout.scss'
+import Logo from 'src/components/Logo/Logo'
 
 const { useToken } = theme
 
@@ -23,6 +24,7 @@ const Layout = () => {
   return (
     <section className="app-layout" style={style.layoutBack}>
       <Sider className="sider" style={style.siderBack}>
+        <Logo />
         <Menu />
       </Sider>
       <section className="main">
