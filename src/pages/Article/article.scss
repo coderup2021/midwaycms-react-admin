@@ -1,6 +1,18 @@
 .article-page {
   padding: 0 20px;
 
+  .article-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    .header-left {
+    }
+    .header-right {
+      .header-icon {
+        font-size: 24px;
+      }
+    }
+  }
   .content-label {
     margin-right: 10px;
   }

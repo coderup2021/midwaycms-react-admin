@@ -1,8 +1,10 @@
 import React, { FC, useCallback, useState } from 'react'
 import MDEditor from '@uiw/react-md-editor'
-import { Button, Form, Input, Select } from 'antd'
+import { Button, Form, Input, Select, Space } from 'antd'
 import './article.scss'
 import WangEditor from './WangEditor'
+import { useSetRecoilState } from 'recoil'
+import { articleModalAtom } from 'src/recoil/articleAtom'
 const { useForm } = Form
 const { Option } = Select
 
@@ -10,11 +12,18 @@ type Editor = 'md' | 'wang'
 
 const ArticleForm = () => {
   const [editor, setEditor] = useState<Editor>('md')
+  const setArticleModal = useSetRecoilState(articleModalAtom)
   const [form] = useForm()
   const onFinish = (value: any) => {
     console.log('value', value)
   }
   const onFinishFailed = () => {}
+  const onCancel = useCallback(() => {
+    setArticleModal((state) => ({
+      ...state,
+      showForm: false,
+    }))
+  }, [])
   return (
     <div className="article-page">
       <Form
@@ -61,9 +70,14 @@ const ArticleForm = () => {
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 0, span: 2 }}>
-          <Button type="primary" htmlType="submit">
-            Submit
-          </Button>
+          <Space>
+            <Button type="primary" htmlType="submit">
+              Submit
+            </Button>
+            <Button type="default" onClick={onCancel}>
+              取消
+            </Button>
+          </Space>
         </Form.Item>
       </Form>
     </div>
