@@ -4,26 +4,16 @@ import {
   PlusCircleOutlined,
   SwapOutlined,
 } from '@ant-design/icons'
-import {
-  FormInstance,
-  Input,
-  message,
-  Modal,
-  Popover,
-  Select,
-  Space,
-  Table,
-  Tooltip,
-} from 'antd'
-import React, { FC, Ref, useCallback, useEffect, useRef } from 'react'
+import { Input, message, Select, Space, Table, Tooltip } from 'antd'
+import { useCallback, useEffect } from 'react'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { articleModalAtom } from 'src/recoil/articleAtom'
 import ArticleForm from './ArticleForm'
 import { useQuery, useQueryClient } from 'react-query'
-import { delArticle, getArticleDetail, getArticleList } from 'src/http/api'
+import { delArticle, getArticleList } from 'src/http/api'
 import { articleFormAtom, articleListAtom } from 'src/recoil/articleAtom'
 import { ArticleDetail } from 'src/interface'
-import Item from 'antd/es/list/Item'
+import _ from 'lodash'
 
 const ArticleList = () => {
   const articleModal = useRecoilValue(articleModalAtom)
@@ -101,13 +91,20 @@ interface ArticleTableProps {
   articleList: ArticleDetail[]
 }
 
+function formatArticleFormData(article: ArticleDetail) {
+  const obj = _.cloneDeep(article)
+  obj.cateId = obj.cate?.id
+  delete obj.cate
+  return obj
+}
+
 function ArticleTable({ articleList }: ArticleTableProps) {
   const queryClient = useQueryClient()
   const setArticleRecoilForm = useSetRecoilState(articleFormAtom)
   const setArticleModal = useSetRecoilState(articleModalAtom)
   const onEdit = useCallback(
     (item: ArticleDetail) => {
-      setArticleRecoilForm(item)
+      setArticleRecoilForm(formatArticleFormData(item))
       setArticleModal((status) => ({
         ...status,
         showForm: true,
@@ -136,7 +133,13 @@ function ArticleTable({ articleList }: ArticleTableProps) {
       dataIndex: 'updatedAt',
       key: 'updateAt',
     },
-    { title: '所属分类', dataIndex: 'cate', key: 'cate' },
+    {
+      title: '所属分类',
+      key: 'cate',
+      render(item: ArticleDetail) {
+        return item.cate?.name || ''
+      },
+    },
     { title: '标签', dataIndex: 'tags', key: 'tags' },
     { title: '点击', dataIndex: 'clickCount', key: 'clickCount' },
     { title: '状态', dataIndex: 'status', key: 'status' },
@@ -160,28 +163,6 @@ function ArticleTable({ articleList }: ArticleTableProps) {
       },
     },
   ]
-  //   const dataSource = [
-  //     {
-  //       key: '1',
-  //       title: '第一篇',
-  //       author: '临江',
-  //       updatedAt: '2023-12-12',
-  //       cate: 'a/bc/d',
-  //       tags: 'abc, bcd, edf',
-  //       clickCount: 123,
-  //       status: '成功',
-  //     },
-  //     {
-  //       key: '2',
-  //       title: '第二篇',
-  //       author: '临江',
-  //       updatedAt: '2023-12-12',
-  //       cate: 'a/bc/d',
-  //       tags: 'abc, bcd, edf',
-  //       clickCount: 100,
-  //       status: '成功',
-  //     },
-  //   ]
 
   return (
     <div className="article-table">

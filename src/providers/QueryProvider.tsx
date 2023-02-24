@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 
 // Create a client
 
-const QueryProvider: FC<PropsWithChildren<{}>> = ({ children }) => {
+const QueryProvider: FC<PropsWithChildren<object>> = ({ children }) => {
   const queryClient = new QueryClient()
   return (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>

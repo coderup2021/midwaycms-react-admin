@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from 'react'
 import { Button, Form, Input, message, Space, TreeSelect } from 'antd'
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { cateFormAtom, cateModalAtom, cateTreeAtom } from 'src/recoil/cateAtom'
 import { postCate, putCate } from 'src/http/api'
 import { useQueryClient } from 'react-query'
@@ -13,11 +13,10 @@ const CateForm = () => {
   const queryClient = useQueryClient()
   const cateRecoilForm = useRecoilValue(cateFormAtom)
   const setCateModal = useSetRecoilState(cateModalAtom)
-  const [cateTree, setCateTree] = useRecoilState(cateTreeAtom)
+  const cateTree = useRecoilValue(cateTreeAtom)
   const [form] = useForm()
 
   useEffect(() => {
-    console.log('cateRecoilForm', cateRecoilForm)
     form.setFieldsValue(cateRecoilForm)
   }, [cateRecoilForm, form])
 
@@ -38,7 +37,9 @@ const CateForm = () => {
     form.resetFields()
     queryClient.invalidateQueries(['cateList'])
   }
-  const onFinishFailed = () => {}
+  const onFinishFailed = () => {
+    console.log('finish failed')
+  }
   const onCancel = useCallback(() => {
     setCateModal((state) => ({
       ...state,

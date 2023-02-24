@@ -9,7 +9,7 @@ const http = async (
   endpoint: string,
   { data = {}, method = 'GET', ...customConfig }: CustomAxiosRequestConfig = {},
 ) => {
-  let params: {} | null = null
+  let params: object | null = null
   if (method === 'GET') {
     data.IEtimeStamp = new Date().getTime()
   }
@@ -30,6 +30,7 @@ const http = async (
   } catch (error) {
     const _err = error as AxiosError
     if (_err!.response!.status === 401) {
+      console.log(401)
     }
   }
 }

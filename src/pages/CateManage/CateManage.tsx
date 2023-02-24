@@ -5,42 +5,25 @@ import {
   SwapOutlined,
 } from '@ant-design/icons'
 import { message, Modal, Space, Table, Tooltip } from 'antd'
-import { useCallback, useEffect } from 'react'
+import { useCallback } from 'react'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import CateForm from './CateForm'
-import { useQuery, useQueryClient } from 'react-query'
-import { delCate, getCateList } from 'src/http/api'
+import { useQueryClient } from 'react-query'
+import { delCate } from 'src/http/api'
 import {
   cateModalAtom,
   cateFormAtom,
-  cateListAtom,
   cateTreeAtom,
-  cateIdNameMapAtom,
   cateExpandedKeysAtom,
 } from 'src/recoil/cateAtom'
 import { Cate } from 'src/interface'
-import { genIdNameProp, removeEmptyChildren, flatToTree } from 'src/utils'
 import _ from 'lodash'
 import { TableRowSelection } from 'antd/es/table/interface'
+import { useCateData } from 'src/hooks/commonHooks'
 
 const CateManage = () => {
   const cateModal = useRecoilValue(cateModalAtom)
-  const setCateList = useSetRecoilState(cateListAtom)
-  const setCateTree = useSetRecoilState(cateTreeAtom)
-  const setCateIdNameMap = useSetRecoilState(cateIdNameMapAtom)
-  const setExpandedKeys = useSetRecoilState(cateExpandedKeysAtom)
-  const { data, isSuccess } = useQuery('cateList', () =>
-    getCateList().then((res) => res.data),
-  )
-
-  useEffect(() => {
-    if (!isSuccess || !data) return
-    const tmpData = _.cloneDeep(data)
-    setCateList(tmpData)
-    setCateTree(removeEmptyChildren(flatToTree(tmpData)))
-    setCateIdNameMap(genIdNameProp(tmpData))
-    setExpandedKeys(tmpData.map((item: Cate) => item.name + item.id))
-  }, [isSuccess, data])
+  useCateData()
 
   return (
     <div className="cate-page page-container">

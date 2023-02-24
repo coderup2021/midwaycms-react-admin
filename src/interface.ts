@@ -13,6 +13,8 @@ export interface ArticleDetail {
   description: null | string
   editorType: number //编辑器类型，1:markdown；2:富文本编辑器
   title: string
+  cate?: Cate
+  cateId?: number
   updatedAt: null | string
   createdAt: string
   deletedAt: null | string

@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useEffect, useState } from 'react'
-import { Button, Form, Input, message, Select, Space } from 'antd'
+import { Button, Form, Input, message, Select, Space, TreeSelect } from 'antd'
 import './article.scss'
 import WangEditor from './WangEditor'
 import MDEditor from './MDEditor'
@@ -7,24 +7,29 @@ import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { articleFormAtom, articleModalAtom } from 'src/recoil/articleAtom'
 import { postArticle, putArticle } from '../../http/api'
 import { useQueryClient } from 'react-query'
+import { cateTreeAtom } from 'src/recoil/cateAtom'
+import { useCateData } from 'src/hooks/commonHooks'
 const { useForm } = Form
 const { Option } = Select
 const { TextArea } = Input
 
-type Editor = 'md' | 'wang'
+type Editor = '1' | '2'
 
 const ArticleForm = () => {
-  const [editor, setEditor] = useState<Editor>('md')
+  const [editor, setEditor] = useState<Editor>('1')
   const queryClient = useQueryClient()
   const articleRecoilForm = useRecoilValue(articleFormAtom)
   const setArticleModal = useSetRecoilState(articleModalAtom)
+  const cateTree = useRecoilValue(cateTreeAtom)
   const [form] = useForm()
+  useCateData()
 
   useEffect(() => {
     form.setFieldsValue(articleRecoilForm)
   }, [articleRecoilForm, form])
 
   const onFinish = async (value: any) => {
+    value.editorType = editor
     if (value.id) {
       await putArticle(value)
     } else {
@@ -38,7 +43,9 @@ const ArticleForm = () => {
     onCancel()
     queryClient.invalidateQueries(['articleList'])
   }
-  const onFinishFailed = () => {}
+  const onFinishFailed = () => {
+    console.log('finish failed')
+  }
   const onCancel = useCallback(() => {
     setArticleModal((state) => ({
       ...state,
@@ -68,13 +75,19 @@ const ArticleForm = () => {
         >
           <Input />
         </Form.Item>
-
+        <Form.Item label={'父级目录'} name="cateId" style={{ width: 300 }}>
+          <TreeSelect
+            treeDefaultExpandAll
+            treeData={cateTree}
+            fieldNames={{ value: 'id', label: 'name' }}
+          />
+        </Form.Item>
         <Form.Item
           label={<ContentLabel editor={editor} setEditor={setEditor} />}
           name="content"
           rules={[{ required: true, message: '内容不能为空哦' }]}
         >
-          {editor === 'md' && (
+          {editor === '1' && (
             <MDEditor
               height={800}
               onChange={(value) => {
@@ -84,7 +97,7 @@ const ArticleForm = () => {
               defaultContent={articleRecoilForm.content || ''}
             />
           )}
-          {editor === 'wang' && (
+          {editor === '2' && (
             <WangEditor
               content={form.getFieldValue('content')}
               onChange={(value) => form.setFieldValue('content', value)}
@@ -125,10 +138,10 @@ const ContentLabel: FC<ContentLabelProps> = ({ editor, setEditor }) => {
     <>
       <span className="content-label">内容</span>
       <Select value={editor} onChange={setEditor} className="editor-selector">
-        <Option key="full" value="wang">
+        <Option key="full" value="2">
           Wang富文本编辑器
         </Option>
-        <Option key="md" value="md">
+        <Option key="md" value="1">
           Markdown编辑器
         </Option>
       </Select>

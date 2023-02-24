@@ -9,11 +9,9 @@ const getRoutes = (routesData: MenuProp[]) => {
     const Component = component as FC
     if (menu.children && menu.children.length > 0) {
       return (
-        <Route
-          path={menu.link}
-          key={menu.link}
-          children={getRoutes(menu.children!)}
-        />
+        <Route path={menu.link} key={menu.link}>
+          {getRoutes(menu.children!)}
+        </Route>
       )
     } else {
       return (
