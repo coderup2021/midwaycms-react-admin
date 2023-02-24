@@ -1,0 +1,39 @@
+{
+  "name": "front",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "lint-staged": "lint-staged",
+    "lint": "eslint '**/*.{js,jsx,ts,tsx}' --fix --quiet "
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^17.4.4",
+    "@commitlint/config-conventional": "^17.4.4",
+    "@types/react": "^18.0.27",
+    "@types/react-dom": "^18.0.10",
+    "@typescript-eslint/eslint-plugin": "^5.52.0",
+    "@typescript-eslint/parser": "^5.52.0",
+    "@vitejs/plugin-react": "^3.1.0",
+    "commitlint": "^17.4.4",
+    "eslint": "^8.34.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.32.2",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.1.2",
+    "prettier": "^2.8.4",
+    "typescript": "^4.9.3",
+    "vite": "^4.1.0"
+  },
+  "lint-staged": {
+    "*.{js,jsx,css,md,ts,tsx,json,less,scss}": "prettier --write"
+  }
+}
