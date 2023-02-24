@@ -1,40 +1,69 @@
+@import 'src/var.scss';
+
 .app-layout {
-  height: 100%;
+  height: 100vh;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: start;
 
-  .sider {
-    height: 100%;
+  .header {
+    height: var(--header-height);
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    .header-left {
+      height: 100%;
+      text-align: left;
+      width: 200px;
+    }
+    .header-right {
+      height: 100%;
+      flex: 1;
+      text-align: right;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-end;
+    }
   }
   .main {
-    flex: 1;
     display: flex;
-    flex-direction: column;
-    height: 100vh;
-    overflow-y: hidden;
+    flex-direction: row;
+    width: 100%;
+    height: calc(100vh - var(--header-height));
+    border: solid 1px #fff;
 
-    .header {
-      padding: 0 10px;
-      margin: 0;
-      width: 100%;
-      height: 50px;
-      line-height: 50px;
-      text-align: left;
-      border: solid 1px blue;
+    .sider {
+      height: 100%;
     }
     .content {
       flex: 1;
-      padding: 0;
-      margin: 0;
-      width: 100%;
+      display: flex;
+      flex-direction: column;
       overflow-y: auto;
-    }
-    .footer {
-      padding: 0;
-      margin: 0;
-      width: 100%;
-      height: 30px;
+      height: 100%;
+
+      .bread {
+        padding: 0 10px;
+        margin: 0;
+        width: 100%;
+        height: var(--bread-height);
+        line-height: var(--bread-height);
+        text-align: left;
+      }
+      .content-main {
+        padding: 0;
+        margin: 0;
+        width: 100%;
+        overflow-y: auto;
+        height: calc(100vh - var(--bread-height) - var(--footer-height));
+      }
+      .footer {
+        padding: 0;
+        margin: 0;
+        width: 100%;
+        height: var(--footer-height);
+      }
     }
   }
 }

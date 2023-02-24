@@ -18,3 +18,8 @@ export const menuFoldAtom = atom<boolean>({
   key: 'menuFoldAtom',
   default: true,
 })
+
+export const lngAtom = atom<string>({
+  key: 'lngAtom',
+  default: window.navigator.language,
+})

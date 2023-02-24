@@ -1,8 +1,23 @@
 import Layout from './Layout'
-import Header from './Header'
-import Footer from './Footer'
-import Content from './Content'
-import Sider from './Sider'
+import Container from './Container'
 
 export default Layout
-export { Header, Footer, Content, Sider }
+
+const Main = Container
+const Sider = Container
+const Content = Container
+const Header = Container
+const HeaderLeft = Container
+const HeaderRight = Container
+const Footer = Container
+
+export {
+  Header,
+  HeaderLeft,
+  HeaderRight,
+  Footer,
+  Container,
+  Content,
+  Sider,
+  Main,
+}

@@ -20,7 +20,7 @@ const Bread = () => {
     setMenuFold(false)
   }, [])
   return (
-    <div className="bread">
+    <>
       <span className="toggle-icon">
         {menuFold ? (
           <MenuUnfoldOutlined onClick={unfoldMenu} />
@@ -29,7 +29,7 @@ const Bread = () => {
         )}
       </span>
       <span className="path">{absolutePath}</span>
-    </div>
+    </>
   )
 }
 export default Bread

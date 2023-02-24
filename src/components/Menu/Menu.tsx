@@ -9,9 +9,10 @@ import { useLocation } from 'react-router-dom'
 import { getAbsoluteLink, getKeyByLink, getOpenedKeys } from './utils'
 import './menu.scss'
 import { useRecoilValue } from 'recoil'
-import { menuFoldAtom } from '../../recoil/atom'
+import { menuFoldAtom } from 'src/recoil/atom'
+import { useTranslation } from 'react-i18next'
 
-const { useToken } = theme
+// const { useToken } = theme
 
 type MenuItem = Required<MenuProps>['items'][number]
 
@@ -32,11 +33,14 @@ function getItem(
 }
 
 function getItemLabel(menu: MenuProp, routesData: MenuProp[]) {
+  const { t } = useTranslation()
   if (menu.children) {
-    return menu.titleKey
+    return t(menu.titleKey)
   } else {
     return (
-      <Link to={getAbsoluteLink(menu.link, routesData)}>{menu.titleKey}</Link>
+      <Link to={getAbsoluteLink(menu.link, routesData)}>
+        {t(menu.titleKey)}
+      </Link>
     )
   }
 }
@@ -54,21 +58,21 @@ function getItems(routes: MenuProp[]): MenuItem[] {
 }
 
 const MenuComp: React.FC = () => {
-  const { token } = useToken()
+  //   const { token } = useToken()
   const { pathname } = useLocation()
   const [selectedKeys, setSelectedKeys] = useState(['/'])
   const [openedKeys, setOpenedKeys] = useState<string[]>([])
   const menuFold = useRecoilValue(menuFoldAtom)
 
   //TODO Multi Skin
-  const style = useMemo(
-    () => ({
-      //   color: token.colorText,
-      //   backgroundColor: token.colorBgContainer,
-      height: '100%',
-    }),
-    [token],
-  )
+  //   const style = useMemo(
+  // () => ({
+  //   color: token.colorText,
+  //   backgroundColor: token.colorBgContainer,
+  //   height: '100%',
+  // }),
+  // [token],
+  //   )
   const items = getItems(routesData)
 
   useEffect(() => {
