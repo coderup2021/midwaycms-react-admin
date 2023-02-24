@@ -1,21 +1,42 @@
-import React, { FC, useCallback, useState } from 'react'
-import MDEditor from '@uiw/react-md-editor'
-import { Button, Form, Input, Select, Space } from 'antd'
+import React, { FC, useCallback, useEffect, useState } from 'react'
+import { Button, Form, Input, message, Select, Space } from 'antd'
 import './article.scss'
 import WangEditor from './WangEditor'
-import { useSetRecoilState } from 'recoil'
-import { articleModalAtom } from 'src/recoil/articleAtom'
+import MDEditor from './MDEditor'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { articleFormAtom, articleModalAtom } from 'src/recoil/articleAtom'
+import { postArticle, putArticle } from '../../http/api'
+import { useQueryClient } from 'react-query'
 const { useForm } = Form
 const { Option } = Select
+const { TextArea } = Input
 
 type Editor = 'md' | 'wang'
 
 const ArticleForm = () => {
   const [editor, setEditor] = useState<Editor>('md')
+  const queryClient = useQueryClient()
+  const articleRecoilForm = useRecoilValue(articleFormAtom)
   const setArticleModal = useSetRecoilState(articleModalAtom)
   const [form] = useForm()
-  const onFinish = (value: any) => {
-    console.log('value', value)
+
+  useEffect(() => {
+    form.setFieldsValue(articleRecoilForm)
+  }, [articleRecoilForm, form])
+
+  const onFinish = async (value: any) => {
+    if (value.id) {
+      await putArticle(value)
+    } else {
+      await postArticle(value)
+    }
+    if (value.id) {
+      message.success('修改成功')
+    } else {
+      message.success('添加成功')
+    }
+    onCancel()
+    queryClient.invalidateQueries(['articleList'])
   }
   const onFinishFailed = () => {}
   const onCancel = useCallback(() => {
@@ -24,17 +45,21 @@ const ArticleForm = () => {
       showForm: false,
     }))
   }, [])
+
   return (
     <div className="article-page">
       <Form
         name="article"
         style={{ width: '100%' }}
-        initialValues={{ article: '# hhiiiihh', title: '' }}
+        initialValues={{ content: '# hhiiiihh', title: '', description: '' }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         layout="vertical"
         form={form}
       >
+        <Form.Item name="id" hidden={true}>
+          <Input />
+        </Form.Item>
         <Form.Item
           label="标题"
           name="title"
@@ -46,26 +71,32 @@ const ArticleForm = () => {
 
         <Form.Item
           label={<ContentLabel editor={editor} setEditor={setEditor} />}
-          name="article"
+          name="content"
           rules={[{ required: true, message: '内容不能为空哦' }]}
         >
           {editor === 'md' && (
             <MDEditor
               height={800}
-              value={form.getFieldValue('article')}
-              onChange={(value) => form.setFieldValue('article', value || '')}
+              onChange={(value) => {
+                form.setFieldValue('content', value || '')
+              }}
               style={{ backgroundColor: 'fff' }}
+              defaultContent={articleRecoilForm.content || ''}
             />
           )}
           {editor === 'wang' && (
             <WangEditor
-              content={form.getFieldValue('article')}
-              onChange={(value) => form.setFieldValue('article', value)}
+              content={form.getFieldValue('content')}
+              onChange={(value) => form.setFieldValue('content', value)}
             />
           )}
         </Form.Item>
 
-        <Form.Item label="标签" name="tags" wrapperCol={{ span: 16 }}>
+        <Form.Item label="描述" name="description" wrapperCol={{ span: 16 }}>
+          <TextArea />
+        </Form.Item>
+
+        <Form.Item label="标签" name="tags" wrapperCol={{ span: 16 }} hidden>
           <Input />
         </Form.Item>
 

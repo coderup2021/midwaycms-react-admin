@@ -1,4 +1,5 @@
 import { atom } from 'recoil'
+import { ArticleDetail } from 'src/interface'
 
 interface ArticleModalAtom {
   showForm: boolean
@@ -12,4 +13,14 @@ export const articleModalAtom = atom<ArticleModalAtom>({
     showRecycle: false,
     showMove: false,
   },
+})
+
+export const articleListAtom = atom<ArticleDetail[]>({
+  key: 'articleListAtom',
+  default: [],
+})
+
+export const articleFormAtom = atom<Partial<ArticleDetail>>({
+  key: 'articleFormAtom',
+  default: {},
 })
