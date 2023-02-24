@@ -17,24 +17,24 @@ export function getKeyByLink(path: string, routesData: MenuProp[]) {
   return _getKeyByLink(tailPath, routesData)
 }
 
-export function getAbsoluteLink(menu: MenuProp, routesData: MenuProp[]) {
+export function getAbsoluteLink(link: string, routesData: MenuProp[]) {
   const path: string[] = []
   let flag = false
-  function search(menu: MenuProp, routeData: MenuProp[]) {
+  function search(link: string, routeData: MenuProp[]) {
     for (let i = 0; i < routeData.length; i++) {
       if (flag) return
       const item = routeData[i]
-      if (item.key === menu.key) {
+      if (item.link.endsWith(link)) {
         flag = true
         path.unshift(item.link)
         return
       } else if (item.children && item.children.length > 0) {
-        search(menu, item.children)
+        search(link, item.children)
       }
       if (flag) path.unshift(item.link)
     }
   }
-  search(menu, routesData)
+  search(link, routesData)
   return path.join('')
 }
 

@@ -13,3 +13,8 @@ export const menuStateAtom = atom<MenuState>({
     menus: [],
   },
 })
+
+export const menuFoldAtom = atom<boolean>({
+  key: 'menuFoldAtom',
+  default: true,
+})

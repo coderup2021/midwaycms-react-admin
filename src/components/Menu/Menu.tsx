@@ -8,6 +8,8 @@ import { Link } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
 import { getAbsoluteLink, getKeyByLink, getOpenedKeys } from './utils'
 import './menu.scss'
+import { useRecoilValue } from 'recoil'
+import { menuFoldAtom } from '../../recoil/atom'
 
 const { useToken } = theme
 
@@ -33,7 +35,9 @@ function getItemLabel(menu: MenuProp, routesData: MenuProp[]) {
   if (menu.children) {
     return menu.titleKey
   } else {
-    return <Link to={getAbsoluteLink(menu, routesData)}>{menu.titleKey}</Link>
+    return (
+      <Link to={getAbsoluteLink(menu.link, routesData)}>{menu.titleKey}</Link>
+    )
   }
 }
 
@@ -50,15 +54,12 @@ function getItems(routes: MenuProp[]): MenuItem[] {
 }
 
 const MenuComp: React.FC = () => {
-  const [collapsed, setCollapsed] = useState(false)
   const { token } = useToken()
   const { pathname } = useLocation()
   const [selectedKeys, setSelectedKeys] = useState(['/'])
   const [openedKeys, setOpenedKeys] = useState<string[]>([])
+  const menuFold = useRecoilValue(menuFoldAtom)
 
-  const toggleCollapsed = () => {
-    setCollapsed(!collapsed)
-  }
   //TODO Multi Skin
   const style = useMemo(
     () => ({
@@ -73,26 +74,22 @@ const MenuComp: React.FC = () => {
   useEffect(() => {
     const key = getKeyByLink(pathname, routesData)
     const keys = getOpenedKeys(pathname, routesData)
-    setOpenedKeys(keys)
+    !menuFold && setOpenedKeys(keys)
     setSelectedKeys([key || '/'])
   }, [pathname])
 
   return (
-    <div>
-      <Button type="primary" onClick={toggleCollapsed}>
-        {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-      </Button>
-      <Menu
-        selectedKeys={selectedKeys}
-        openKeys={openedKeys}
-        mode="inline"
-        theme="light"
-        inlineCollapsed={collapsed}
-        items={items}
-        className="midway-menu"
-        onOpenChange={(item) => setOpenedKeys(item)}
-      />
-    </div>
+    <Menu
+      selectedKeys={selectedKeys}
+      openKeys={openedKeys}
+      mode="inline"
+      theme="light"
+      inlineCollapsed={menuFold}
+      items={items}
+      className="midway-menu"
+      onOpenChange={(item) => setOpenedKeys(item)}
+      style={{ minWidth: menuFold ? 110 : 200 }}
+    />
   )
 }
 

@@ -5,6 +5,7 @@ import { theme } from 'antd'
 import { Header, Footer, Content, Sider } from './'
 import './layout.scss'
 import Logo from 'src/components/Logo/Logo'
+import Bread from 'src/components/Bread/Bread'
 
 const { useToken } = theme
 
@@ -28,7 +29,9 @@ const Layout = () => {
         <Menu />
       </Sider>
       <section className="main">
-        <Header className="header">Header</Header>
+        <Header className="header">
+          <Bread />
+        </Header>
         <Content className="content">
           <Outlet />
         </Content>
