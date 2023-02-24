@@ -38,7 +38,7 @@ const ArticleList = () => {
   }, [isSuccess, data])
 
   return (
-    <div className="article-page">
+    <div className="article-page page-container">
       {articleModal.showForm ? (
         <ArticleForm />
       ) : (

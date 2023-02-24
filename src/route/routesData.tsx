@@ -10,6 +10,7 @@ import {
   FormOutlined,
   FileTextOutlined,
 } from '@ant-design/icons'
+import CateManage from 'src/pages/CateManage'
 
 export interface MenuProp {
   index?: boolean
@@ -48,7 +49,7 @@ export const routesData: MenuProp[] = [
         key: 'cateManage',
         titleKey: 'cateManage',
         link: 'cate-manage',
-        component: ArticleForm,
+        component: CateManage,
         icon: <FormOutlined />,
       },
       {

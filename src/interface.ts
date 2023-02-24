@@ -3,25 +3,26 @@ export enum HttpStatus {
   ERROR = -1,
 }
 
+export interface IdNameMapProps {
+  [prop: number]: string
+}
+
 export interface ArticleDetail {
-  /**
-   * 正文
-   */
   id: number
   content: string
-  createdAt: string
-  deletedAt: null | string
-  /**
-   * 描述
-   */
   description: null | string
-  /**
-   * 编辑器类型，1:markdown；2:富文本编辑器
-   */
-  editorType: number
-  /**
-   * 标题
-   */
+  editorType: number //编辑器类型，1:markdown；2:富文本编辑器
   title: string
   updatedAt: null | string
+  createdAt: string
+  deletedAt: null | string
+}
+
+export interface Cate {
+  id: number
+  name: string
+  parentId: number
+  parentIdPaths?: number[]
+  path: string
+  children?: Cate[]
 }
